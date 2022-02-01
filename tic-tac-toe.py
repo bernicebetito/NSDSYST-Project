@@ -15,12 +15,12 @@ class TicTacToe:
 
     def gameContinue(self):
         for row in range(3):
-            if list(self.grid_content[row][col] for col in range(3)) == [self.grid_content[row][0] * 3] and self.grid_content[row][0] != "     ":
+            if list(self.grid_content[row][col] for col in range(3)) == [self.grid_content[row][0] for _ in range(3)] and "     " not in self.grid_content[row]:
                 self.winner = self.grid_content[row][0]
                 return False
 
         for col in range(3):
-            if list(self.grid_content[row][col] for row in range(3)) == [self.grid_content[0][col] * 3] and self.grid_content[0][col] != "     ":
+            if list(self.grid_content[row][col] for row in range(3)) == [self.grid_content[0][col] for _ in range(3)] and self.grid_content[0][col] != "     ":
                 self.winner = self.grid_content[0][col]
                 return False
 
@@ -102,6 +102,8 @@ if __name__ == "__main__":
                 if player_move.isdigit():
                     if 0 < int(player_move) < 10:
                         playerTurn = tictactoe.playerTurn(turn.upper(), int(player_move))
+                        if not playerTurn:
+                            print("Tile already occupied!\n")
                     else:
                         print("Invalid location!\n")
                 else:
