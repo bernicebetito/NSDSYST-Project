@@ -12,7 +12,7 @@ def to_json(pythonObj):
     return data
 
 # JSON commands
-game_state = '{"command": "game_state", "board": "", "continue": "", "turn": "", "winner": ""}'
+game_state = '{"command": "game_state", "board": "", "continue": "", "turn": "", "winner": "", "icon": ""}'
 success = '{"command": "retcode", "code": "SUCCESS"}'
 error = '{"command": "retcode", "code": "ERROR"}'
 
@@ -82,6 +82,7 @@ class MainServer (object):
         self.turn = self.player_one
         self.do_continue = "true"
         self.moves = dict()
+        self.icon = "X"
 
         count = 1
         for row in range(len(self.grid_content)):
@@ -147,6 +148,7 @@ class MainServer (object):
             self.game_state["winner"] = self.winner
             self.game_state["turn"] = self.turn
             self.game_state["continue"] = self.do_continue
+            self.game_state["icon"] = self.icon
             self.game_state = to_json(self.game_state)
 
             # Forward game state
@@ -155,19 +157,21 @@ class MainServer (object):
 
             # Wait for player action
             self.data = sock.recvfrom(1024)
-            self.action = to_python(self.data.decode("utf-8"))
+            self.action = to_python(self.data[0])
 
             # Process player action
             if self.action["command"] == "action":
                 print("Player action received from game server")
                 self.player_move = int(self.action["action"])
                 self.player_name = self.action["name"]
-                self.playerTurn(self.player_name, self.player_move)
+                self.playerTurn(self.player_name, int(self.player_move))
                 self.do_continue = self.gameContinue()
                 if self.turn == self.player_one:
-                    self.turn == self.player_two
+                    self.turn = self.player_two
+                    self.icon = "O"
                 else:
-                    self.turn == self.player_one
+                    self.turn = self.player_one
+                    self.icon = "X"
 
         # Forward final game state
         self.game_state = to_python(game_state)

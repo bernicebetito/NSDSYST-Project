@@ -103,7 +103,7 @@ class Player(object):
         while joined == 1:
 
             # Receive game state
-            self.game_state = sock.recvfrom(1024)
+            self.data = sock.recvfrom(1024)
             self.game_state = to_python(self.data[0])
             print(self.data[1])
             print(self.game_state)
@@ -113,7 +113,7 @@ class Player(object):
                     
                     # Print game board
                     self.grid_content = self.game_state["board"]
-                    self.print_board(self.grid_content)
+                    self.print_board()
 
                     # Check if it is player's turn
                     turn = self.game_state["turn"]
@@ -124,12 +124,14 @@ class Player(object):
                         while not valid_move:
                             player_move = input("\nEnter Location of " + self.game_state["icon"] + " :")
 
-                            if player_move.isDigit():
+                            if player_move.isdigit():
                                 if 0 < int(player_move) < 10:
                                     playerTurn = self.playerTurn(int(player_move))
 
                                     if not playerTurn:
                                         print("Tile already occupied!\n")
+                                        continue
+                                    valid_move = True
                                     
                                 else:
                                     print("Invalid location!\n")
@@ -150,6 +152,7 @@ class Player(object):
                         print(f"It is currently {turn}'s turn")
 
                 else:
+                    self.print_board()
                     if self.game_state["winner"] == "draw":
                         print(f"\nGame Over! Draw between X and O!")
 

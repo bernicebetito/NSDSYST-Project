@@ -143,9 +143,10 @@ class GameServer (object):
 
                 # Receive action from player and forward to main server
                 self.data = sock.recvfrom(1024)
-                self.action = to_python(self.data.decode('utf-8'))
+                self.action = to_python(self.data[0])
                 self.action = to_json(self.action)
                 sock.sendto(bytes(self.action, 'utf-8'), (self.server_host, self.server_port))
+                print("Received and forwarded player action")
 
             elif self.game_state["continue"] == "false":
 
