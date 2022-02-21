@@ -12,8 +12,8 @@ def to_json(pythonObj):
     return data
 
 # JSON commands
-register = '{"command": "register", "game": "tictactoe"}'
-players_ready = '{"command": "ready", "game": "tictactoe", "player_one": "", "player_two": ""}'
+register = '{"command": "register", "game": "hangman"}'
+players_ready = '{"command": "ready", "game": "hangman", "player_one": "", "player_two": ""}'
 success = '{"command": "retcode", "code": "SUCCESS"}'
 error = '{"command": "retcode","code": "ERROR"}'
 
@@ -68,7 +68,7 @@ class GameServer (object):
             self.player_request = to_python(self.data[0])
 
             if self.player_request["command"] == "join":
-                if players == 0 and self.player_request["game"] == "tictactoe":
+                if players == 0 and self.player_request["game"] == "hangman":
                     self.player_one_name = self.player_request["username"]
                     self.player_one_addr = self.data[1]
                     print(f"Player {self.player_one_name} has connected")
@@ -79,7 +79,7 @@ class GameServer (object):
                     self.success = to_json(self.success)
                     sock.sendto(bytes(self.success, "utf-8"), self.player_one_addr)
 
-                elif players == 1 and self.player_request["game"] == "tictactoe":
+                elif players == 1 and self.player_request["game"] == "hangman":
                     self.player_two_name = self.player_request["username"]
                     self.player_two_addr = self.data[1]
                     print(f"Player {self.player_two_name} has connected")
@@ -163,8 +163,8 @@ class GameServer (object):
 if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
-        # Set variables for self address and destination port
-        lobby_host = input("IP address of lobby: ")
+    # Set variables for self address and destination port
+        lobby_host = input("IP address of main server: ")
         lobby_port = 5555
 
         result = bool(re.match(regex, lobby_host))
@@ -175,9 +175,9 @@ if __name__ == "__main__":
             print("Invalid IP Address, please try again.\n")
 
     while True:
-        # Set variables for server address and destination port
-        server_host = input("IP address of main server: ")
-        server_port = 12345
+    # Set variables for server address and destination port
+        server_host = "192.168.254.108"
+        server_port = 54321
 
         result = bool(re.match(regex, server_host))
         if (result):
@@ -201,5 +201,5 @@ if __name__ == "__main__":
 
     time.sleep(2)
 
-    while playing == 1:    
+    while playing == 1:
         game.forward_and_receive()
