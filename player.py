@@ -122,7 +122,7 @@ class Player(object):
                         self.getMoves()
                         valid_move = False
                         while not valid_move:
-                            player_move = input("\nEnter Location of " + self.game_state["icon"] + " :")
+                            player_move = input("\nEnter Location of " + self.game_state["icon"] + " : ")
 
                             if player_move.isdigit():
                                 if 0 < int(player_move) < 10:
@@ -168,7 +168,7 @@ if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
     # Set variables for server address and destination port
-        server_host = "192.168.64.1"
+        server_host = input("IP address of lobby: ")
         server_port = 5555
 
         result = bool(re.match(regex, server_host))
