@@ -198,7 +198,7 @@ if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
         # Set variables for self address and destination port
-        lobby_host = "192.168.1.2"
+        lobby_host = input("Enter IP address of lobby: ")
         lobby_port = int(input("Port of lobby (5555 for tic-tac-toe, 4444 for hangman): "))
 
         result = bool(re.match(regex, lobby_host))
@@ -210,7 +210,7 @@ if __name__ == "__main__":
 
     while True:
         # Set variables for server address and destination port
-        server_host = "192.168.1.2"
+        server_host = input("Enter IP address of main server: ")
         server_port = int(input("Port of main server (12345 for tic-tac-toe, 54321 for hangman): "))
 
         result = bool(re.match(regex, server_host))

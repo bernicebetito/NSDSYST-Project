@@ -263,7 +263,7 @@ class tictactoeGame():
 
             # Forward game state
             tic_sock.sendto(bytes(self.game_state, "utf-8"), self.lobby_addr)
-            print("Game state forwarded to game server")
+            print("Game state forwarded to tictactoe game server")
 
             # Wait for player action
             self.data = tic_sock.recvfrom(1024)
@@ -271,7 +271,7 @@ class tictactoeGame():
 
             # Process player action
             if self.action["command"] == "action":
-                print("Player action received from game server")
+                print("Player action received from tictactoe game server")
                 self.player_move = int(self.action["action"])
                 self.player_name = self.action["name"]
                 self.playerTurn(self.player_name, int(self.player_move))
@@ -374,7 +374,7 @@ class hangmanGame():
 
             # Forward game state
             hang_sock.sendto(bytes(self.game_state, "utf-8"), self.lobby_addr)
-            print("Game state forwarded to game server")
+            print("Game state forwarded to hangman game server")
 
             # Wait for player action
             self.data = hang_sock.recvfrom(1024)
@@ -382,7 +382,7 @@ class hangmanGame():
 
             # Process player action
             if self.action["command"] == "action":
-                print("Player action received from game server")
+                print("Player action received from hangman game server")
                 self.init_hangman(self.action["action"])
                 self.turn = self.hang_player_one
 
@@ -399,7 +399,7 @@ class hangmanGame():
 
             # Forward game state
             hang_sock.sendto(bytes(self.game_state, "utf-8"), self.lobby_addr)
-            print("Game state forwarded to game server")
+            print("Game state forwarded to hangman game server")
 
             # Wait for player action
             self.data = hang_sock.recvfrom(1024)
@@ -407,7 +407,7 @@ class hangmanGame():
 
             # Process player action
             if self.action["command"] == "action":
-                print("Player action received from game server")
+                print("Player action received from hangman game server")
                 self.player_move = self.action["action"]
                 if len(self.player_move) == 1:
                     self.findLetter(self.player_move)
