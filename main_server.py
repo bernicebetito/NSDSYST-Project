@@ -51,6 +51,7 @@ class MainServer(object):
                 return 1
             else:
                 print("Unknown Lobby connecting")
+                print("This is from the tic thread")
                 self.error = to_python(error)
                 self.error = to_json(self.error)
                 tic_sock.sendto(bytes(self.error, "utf-8"), lobby_addr)
@@ -84,6 +85,7 @@ class MainServer(object):
                 return 1
             else:
                 print("Unknown Lobby connecting")
+                print("This is from the hang thread")
                 self.error = to_python(error)
                 self.error = to_json(self.error)
                 hang_sock.sendto(bytes(self.error, "utf-8"), lobby_addr)
@@ -452,7 +454,7 @@ if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
         # Set variables for server address and destination port
-        tic_server_host = input("IP address of main server: ")
+        tic_server_host = "192.168.1.2"
         tic_server_port = 12345
         hang_server_host = tic_server_host
         hang_server_port = 54321
@@ -467,11 +469,11 @@ if __name__ == "__main__":
     # Initialize main server
     main = MainServer(tic_server_host, tic_server_port, hang_server_host, hang_server_port)
 
-    #tic_thread = tictactoeThread(main)
+    tic_thread = tictactoeThread(main)
     hang_thread = hangmanThread(main)
 
-    #tic_thread.start()
+    tic_thread.start()
     hang_thread.start()
 
-    #tic_thread.join()
+    tic_thread.join()
     hang_thread.join()

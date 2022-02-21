@@ -32,6 +32,8 @@ class GameServer (object):
 
         # Ready register request
         self.registerRequest = to_python(register)
+        if self.server_port == 54321:
+            self.registerRequest["game"] = "hangman"
         self.registerRequest = to_json(self.registerRequest)
 
         # Send register request
@@ -41,6 +43,7 @@ class GameServer (object):
         self.data = sock.recvfrom(1024)
         self.return_code = to_python(self.data[0])
 
+        print(self.return_code)
         if self.return_code["code"] == "SUCCESS":
             print("Established communication with the main server")
             global registered
@@ -67,8 +70,8 @@ class GameServer (object):
             self.data = sock.recvfrom(1024)
             self.player_request = to_python(self.data[0])
 
-            if self.player_request["command"] == "join":
-                if players == 0 and self.player_request["game"] == "tictactoe":
+            if self.player_request["command"] == "join" and self.player_request["game"] == "tictactoe" and self.server_port == 12345:
+                if players == 0:
                     self.player_one_name = self.player_request["username"]
                     self.player_one_addr = self.data[1]
                     print(f"Player {self.player_one_name} has connected")
@@ -79,7 +82,36 @@ class GameServer (object):
                     self.success = to_json(self.success)
                     sock.sendto(bytes(self.success, "utf-8"), self.player_one_addr)
 
-                elif players == 1 and self.player_request["game"] == "tictactoe":
+                elif players == 1:
+                    self.player_two_name = self.player_request["username"]
+                    self.player_two_addr = self.data[1]
+                    print(f"Player {self.player_two_name} has connected")
+                    players+=1
+
+                    # Notify player
+                    self.success = to_python(success)
+                    self.success = to_json(self.success)
+                    sock.sendto(bytes(self.success, "utf-8"), self.player_two_addr)
+
+                else:
+                    # Notify player
+                    self.error = to_python(error)
+                    self.error = to_json(self.error)
+                    sock.sendto(bytes(self.error, "utf-8"), self.data[1])
+            
+            if self.player_request["command"] == "join" and self.player_request["game"] == "hangman" and self.server_port == 54321:
+                if players == 0:
+                    self.player_one_name = self.player_request["username"]
+                    self.player_one_addr = self.data[1]
+                    print(f"Player {self.player_one_name} has connected")
+                    players+=1
+
+                    # Notify player
+                    self.success = to_python(success)
+                    self.success = to_json(self.success)
+                    sock.sendto(bytes(self.success, "utf-8"), self.player_one_addr)
+
+                elif players == 1:
                     self.player_two_name = self.player_request["username"]
                     self.player_two_addr = self.data[1]
                     print(f"Player {self.player_two_name} has connected")
@@ -102,6 +134,8 @@ class GameServer (object):
         self.ready = to_python(players_ready)
         self.ready["player_one"] = self.player_one_name
         self.ready["player_two"] = self.player_two_name
+        if self.server_port == 54321:
+            self.ready["game"] = "hangman"
         self.ready = to_json(self.ready)
 
         sock.sendto(bytes(self.ready, "utf-8"), (self.server_host, self.server_port))
@@ -164,8 +198,8 @@ if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
         # Set variables for self address and destination port
-        lobby_host = input("IP address of lobby: ")
-        lobby_port = 5555
+        lobby_host = "192.168.1.2"
+        lobby_port = int(input("Port of lobby (5555 for tic-tac-toe, 4444 for hangman): "))
 
         result = bool(re.match(regex, lobby_host))
         if (result):
@@ -176,8 +210,8 @@ if __name__ == "__main__":
 
     while True:
         # Set variables for server address and destination port
-        server_host = input("IP address of main server: ")
-        server_port = 12345
+        server_host = "192.168.1.2"
+        server_port = int(input("Port of main server (12345 for tic-tac-toe, 54321 for hangman): "))
 
         result = bool(re.match(regex, server_host))
         if (result):

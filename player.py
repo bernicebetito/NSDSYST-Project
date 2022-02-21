@@ -346,8 +346,13 @@ if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
         # Set variables for server address and destination port
-        server_host = input("IP address of lobby: ")
-        server_port = 5555
+        server_host = "192.168.1.2"
+
+        if game == 1:
+            server_port = 5555
+        
+        else:
+            server_port = 4444
 
         result = bool(re.match(regex, server_host))
         if (result):
