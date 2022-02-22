@@ -163,9 +163,9 @@ class GameServer (object):
 if __name__ == "__main__":
     regex = "^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
     while True:
-    # Set variables for self address and destination port
-        lobby_host = input("IP address of main server: ")
-        lobby_port = 5555
+        # Set variables for self address and destination port
+        lobby_host = input("Enter IP address of lobby: ")
+        lobby_port = int(input("Port of lobby (5555 for tic-tac-toe, 4444 for hangman): "))
 
         result = bool(re.match(regex, lobby_host))
         if (result):
@@ -175,9 +175,9 @@ if __name__ == "__main__":
             print("Invalid IP Address, please try again.\n")
 
     while True:
-    # Set variables for server address and destination port
-        server_host = "192.168.254.108"
-        server_port = 54321
+        # Set variables for server address and destination port
+        server_host = input("Enter IP address of main server: ")
+        server_port = int(input("Port of main server (12345 for tic-tac-toe, 54321 for hangman): "))
 
         result = bool(re.match(regex, server_host))
         if (result):
